@@ -14,6 +14,8 @@ export class InputFieldComponent implements OnInit, OnDestroy {
   willBeDestroyed$ = new Subject();
   input$ = new Subject<string>();
 
+  hasError: boolean;
+
   @Input() minLength: number;
   @Input() maxLength: number;
 
@@ -31,8 +33,25 @@ export class InputFieldComponent implements OnInit, OnDestroy {
       });
   }
 
+  setErrorCondition(errorCondition: boolean) {
+    this.hasError = errorCondition;
+  }
+
+  checkErrors(value: string) {
+    let hasError = false;
+    if (this.minLength && (!value || value.length < this.minLength)) {
+      hasError = true;
+    }
+    if (this.maxLength && (value && value.length > this.maxLength)) {
+      hasError = true;
+    }
+
+    this.setErrorCondition(hasError);
+  }
+
   inputValue(event: any) {
     this.input$.next(event.target.value);
+    this.checkErrors(event.target.value);
   }
 
   ngOnDestroy(): void {

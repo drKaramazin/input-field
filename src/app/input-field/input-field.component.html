@@ -1,1 +1,1 @@
-<input type="text" #input (input)="inputValue($event)">
+<input type="text" [ngClass]="{ 'has-error': hasError }" (input)="inputValue($event)">
