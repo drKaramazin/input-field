@@ -39,7 +39,7 @@ describe('InputFieldComponent', () => {
       .then(value => expect(value).toBe('someValue'));
   });
 
-  it('simple input test with many changes of value', () => {
+  it('input test with many changes of value', () => {
     setInputValue(fixture, 'input', 'someValue 1');
     setInputValue(fixture, 'input', 'someValue 2');
     setInputValue(fixture, 'input', 'someValue 3');
@@ -47,4 +47,55 @@ describe('InputFieldComponent', () => {
     return component.currentValue.pipe(filter(val => val !== null), take(1)).toPromise()
       .then(value => expect(value).toBe('someValue 3'));
   });
+
+  it('minLength error test', () => {
+    fixture.componentInstance.minLength = 3;
+    let input = fixture.debugElement.query(By.css('.has-error'));
+    fixture.detectChanges();
+    expect(input).toBe(null);
+    setInputValue(fixture, 'input', 'ay');
+    fixture.detectChanges();
+    input = fixture.debugElement.query(By.css('.has-error'));
+    expect(input).not.toBe(null);
+    setInputValue(fixture, 'input', 'ay-ay-ay');
+    fixture.detectChanges();
+    input = fixture.debugElement.query(By.css('.has-error'));
+    expect(input).toBe(null);
+  });
+
+  it('maxLength error test', () => {
+    fixture.componentInstance.maxLength = 5;
+    let input = fixture.debugElement.query(By.css('.has-error'));
+    fixture.detectChanges();
+    expect(input).toBe(null);
+    setInputValue(fixture, 'input', 'ay');
+    fixture.detectChanges();
+    input = fixture.debugElement.query(By.css('.has-error'));
+    expect(input).toBe(null);
+    setInputValue(fixture, 'input', 'ay-ay-ay');
+    fixture.detectChanges();
+    input = fixture.debugElement.query(By.css('.has-error'));
+    expect(input).not.toBe(null);
+  });
+
+  it('minLength and maxLength error test', () => {
+    fixture.componentInstance.minLength = 3;
+    fixture.componentInstance.maxLength = 5;
+    let input = fixture.debugElement.query(By.css('.has-error'));
+    fixture.detectChanges();
+    expect(input).toBe(null);
+    setInputValue(fixture, 'input', 'ay');
+    fixture.detectChanges();
+    input = fixture.debugElement.query(By.css('.has-error'));
+    expect(input).not.toBe(null);
+    setInputValue(fixture, 'input', 'ay-ay');
+    fixture.detectChanges();
+    input = fixture.debugElement.query(By.css('.has-error'));
+    expect(input).toBe(null);
+    setInputValue(fixture, 'input', 'ay-ay-ay');
+    fixture.detectChanges();
+    input = fixture.debugElement.query(By.css('.has-error'));
+    expect(input).not.toBe(null);
+  });
+
 });
