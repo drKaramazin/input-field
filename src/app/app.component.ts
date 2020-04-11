@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'input-field';
+
+  printVal(value: string) {
+    console.log(value);
+  }
 }
